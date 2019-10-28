@@ -8,6 +8,8 @@
 
 ### Configure
 Vagrantfile:
+
+MASTERS = 1 only, more not supported now
 ```
 MASTERS = 1
 NODES = 2

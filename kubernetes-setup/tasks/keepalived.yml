@@ -1,0 +1,16 @@
+---
+- name: Install keepalived
+  package: 
+    name: keepalived
+    state: present
+
+- name: Configure keepalived
+  template: 
+    src: ../templates/keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+
+- name: Start keepalived
+  service:  
+    name: keepalived
+    state: started
+    enabled: yes

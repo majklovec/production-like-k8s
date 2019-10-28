@@ -1,0 +1,32 @@
+---
+- name: Install haproxy
+  package: 
+    name: haproxy
+    state: present
+
+- name: Enable haproxy
+  lineinfile:
+    dest: /etc/default/haproxy
+    regexp: "^ENABLED.+$"
+    line: "ENABLED=1"
+    state: present
+
+- name: Configure haproxy
+  template:
+    src: ../templates/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+    validate: haproxy -f %s -c -q
+
+- name: Ensure nonlocal bind kernel parameter is set
+  sysctl: 
+    name: net.ipv4.ip_nonlocal_bind
+    value: '1'
+    state: present
+    ignoreerrors: yes
+
+- name: Start haproxy
+  service: 
+    name: haproxy 
+    state: started
+    enabled: yes

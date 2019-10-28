@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    release: hello3
+  name: hello3
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      release: hello3
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        project: smarttvapp
+        app: smarttvapp      
+        release: hello3
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 10m
+              memory: 10Mi
+            limits:
+              memory: 20Mi
+              cpu: 20m
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

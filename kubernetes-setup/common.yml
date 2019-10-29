@@ -1,6 +1,4 @@
 ---
-- include: tasks/haproxy.yml
-- include: tasks/keepalived.yml
 - name: Install base packages
   apt:
     name: "{{ packages }}"

@@ -4,12 +4,12 @@ metadata:
   labels:
     project: smarttvapp
     app: smarttvapp
-  name: hello3
+  name: smarttvapp
 spec:
   replicas: 10
   selector:
     matchLabels:
-      release: hello3
+      release: smarttvapp
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,7 +20,7 @@ spec:
       labels:
         project: smarttvapp
         app: smarttvapp
-        release: hello3
+        release: smarttvapp
     spec:
       containers:
         - image: nginx
@@ -76,3 +76,17 @@ spec:
             backend:
               serviceName: smarttv
               servicePort: 90
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: nginx
+  type: LoadBalancer

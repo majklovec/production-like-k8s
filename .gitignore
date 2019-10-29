@@ -1,4 +1,2 @@
-.DS_Store
-.vagrant/
-kubernetes-setup/join-command
+.vagrant
 *.retry

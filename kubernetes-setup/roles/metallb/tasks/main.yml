@@ -1,0 +1,13 @@
+---
+- name: Install MetalLB
+  become: false
+  shell: kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.1/manifests/metallb.yaml
+
+- name: Copy configuration for MetalLB
+  template:
+    src: ../templates/metallb.yml
+    dest: /tmp/metallb.yml
+
+- name: Apply configuration for MetalLB
+  become: false
+  shell: kubectl apply -f  /tmp/metallb.yml

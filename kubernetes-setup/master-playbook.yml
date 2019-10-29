@@ -1,81 +1,20 @@
 ---
 - hosts: all
   become: true
-  tasks:
-    - include: common.yml
-
-    - name: Initialize the Kubernetes cluster
-      command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10" --pod-network-cidr=172.16.0.0/16 --upload-certs
-
-    - name: Copy kubeconfig for vagrant 
-      command: "{{ item }}"
-      with_items:
-        - mkdir -p /home/vagrant/.kube
-        - cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
-        - cp -i /etc/kubernetes/admin.conf /vagrant/admin.conf
-        - chown vagrant:vagrant /home/vagrant/.kube/config /vagrant/admin.conf
-
-    - name: Install calico pod network
-      become: false
-      shell: |
-        wget https://docs.projectcalico.org/v3.10/manifests/calico.yaml -O calico.yaml
-        sed -i "s/192.168.0.0/'"172.16.0.0/16"'/g" calico.yaml
-        kubectl apply -f calico.yaml
-        
-    - name: Install MetalLB
-      become: false
-      shell: kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.1/manifests/metallb.yaml
-
-    - name: Copy configuration for MetalLB
-      template:
-        src: ../templates/metallb.yml
-        dest: /tmp/metallb.yml
-
-    - name: Apply configuration for MetalLB
-      become: false
-      shell: kubectl apply -f  /tmp/metallb.yml
-
-    - name: Copy configuration for Traefik
-      template:
-        src: ../templates/traefik.yml
-        dest: /tmp/traefik.yml
-
-    - name: Apply configuration for Traefik
-      become: false
-      shell: kubectl apply -f  /tmp/traefik.yml
-
-    - name: Check if Kubernetes Dashboard UI service already exists.
-      become: false    
-      shell: kubectl get services --namespace kube-system | grep -q kubernetes-dashboard
-      changed_when: false
-      failed_when: false
-      register: kubernetes_dashboard_service
-
-    - name: Enable the Kubernetes Web Dashboard UI (if configured).
-      become: false    
-      command: "kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml"
-      when:
-        - kubernetes_dashboard_service is failed
-
-    - name: Generate join command
-      command: kubeadm token create --print-join-command
-      register: join_command
-
-    - name: Copy join command to local file
-      become: false
-      local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
-
-    - name: "Fetching {{item}} from master0"
-      fetch:
-        src: /etc/kubernetes/pki/{{item}}
-        dest: /tmp/pki/{{item}}
-        flat: yes
-      with_items:
-        - ca.crt
-        - ca.key
-        - sa.key
-        - sa.pub
-
+  roles:
+    - docker
+    - swap
+    - k8s
+    - iptables
+    - kubelet  
+    - k8s/init-cluster
+    - calico
+    - metallb
+    - traefik
+    - k8s-dashboard
+    - k8s/create-join
+    - k8s/fetch-keys
+  
   handlers:
     - name: docker status
       service: name=docker state=started

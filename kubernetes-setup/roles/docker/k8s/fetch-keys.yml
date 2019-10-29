@@ -1,0 +1,11 @@
+---
+- name: "Fetching {{item}} from master0"
+  fetch:
+    src: /etc/kubernetes/pki/{{item}}
+    dest: /tmp/pki/{{item}}
+    flat: yes
+  with_items:
+    - ca.crt
+    - ca.key
+    - sa.key
+    - sa.pub

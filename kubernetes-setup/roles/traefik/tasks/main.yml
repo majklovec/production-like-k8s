@@ -1,0 +1,9 @@
+---
+- name: Copy configuration for Traefik
+  template:
+    src: ../templates/traefik.yml
+    dest: /tmp/traefik.yml
+
+- name: Apply configuration for Traefik
+  become: false
+  shell: kubectl apply -f  /tmp/traefik.yml

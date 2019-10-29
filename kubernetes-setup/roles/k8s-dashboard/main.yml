@@ -1,0 +1,17 @@
+---
+- name: Check if Kubernetes Dashboard UI service already exists.
+  become: false
+  shell: kubectl get services --namespace kube-system | grep -q kubernetes-dashboard
+  changed_when: false
+  failed_when: false
+  register: kubernetes_dashboard_service
+
+- name: Enable the Kubernetes Web Dashboard UI (if configured).
+  become: false
+  command: "kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml"
+  when:
+    - kubernetes_dashboard_service is failed
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  register: join_command

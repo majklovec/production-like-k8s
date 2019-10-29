@@ -1,0 +1,7 @@
+---
+- name: Get IP eth1 addr
+  shell: ifconfig eth1 | grep 'inet' | cut -d{{':'}} -f2 | awk '{ print $2 }'
+  register: output
+
+- name: Configure kubelet
+  shell: echo 'Environment="KUBELET_EXTRA_ARGS=--node-ip={{ output.stdout }}"' >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf

@@ -4,10 +4,11 @@
   roles:
     - docker
     - swap
-    - k8s
     - iptables
+    - k8s/install
     - kubelet  
     - k8s/join-cluster
+  
   handlers:
     - name: docker status
       service: name=docker state=started

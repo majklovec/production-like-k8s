@@ -1,6 +1,7 @@
 ---
 - name: Initialize the Kubernetes cluster
-  command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10" --pod-network-cidr=172.16.0.0/16 --upload-certs
+  shell: kubeadm init --config=/tmp/kubeadm-config.yaml
+  #command: kubeadm init --apiserver-advertise-address="{{ nodes_network | ipaddr('10') | ipaddr('address') }}" --apiserver-cert-extra-sans="{{ nodes_network | ipaddr('10') | ipaddr('address') }}" --pod-network-cidr="{{ pods_network }}" --upload-certs
 
 - name: Copy kubeconfig for vagrant
   command: "{{ item }}"

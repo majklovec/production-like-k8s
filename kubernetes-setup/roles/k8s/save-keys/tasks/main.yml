@@ -1,5 +1,5 @@
 ---
-- name: "Fetching {{item}} from master0"
+- name: "Saving {{item}} to host"
   fetch:
     src: /etc/kubernetes/pki/{{item}}
     dest: /tmp/pki/{{item}}

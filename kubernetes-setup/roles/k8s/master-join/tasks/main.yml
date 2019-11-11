@@ -1,0 +1,3 @@
+---
+- name: Kubeadm init
+  shell: kubeadm init --config=/tmp/kubeadm-config.yaml

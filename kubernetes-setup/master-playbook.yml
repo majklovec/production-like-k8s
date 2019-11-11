@@ -4,16 +4,17 @@
   roles:
     - docker
     - swap
-    - k8s
     - iptables
+    - k8s/install
     - kubelet  
+    - k8s/init-config
     - k8s/init-cluster
     - calico
     - metallb
     - traefik
     - k8s-dashboard
     - k8s/create-join
-    - k8s/fetch-keys
+    - k8s/save-keys
   
   handlers:
     - name: docker status

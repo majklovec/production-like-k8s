@@ -1,0 +1,11 @@
+---
+- name: "Fetching {{item}} from host"
+  fetch:
+    src: /tmp/pki/{{item}}
+    dest: /etc/kubernetes/pki/{{item}}
+    flat: yes
+  with_items:
+    - ca.crt
+    - ca.key
+    - sa.key
+    - sa.pub

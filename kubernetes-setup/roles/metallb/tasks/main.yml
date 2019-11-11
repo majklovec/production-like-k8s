@@ -5,7 +5,7 @@
 
 - name: Copy configuration for MetalLB
   template:
-    src: ../templates/metallb.yml
+    src: metallb.yml
     dest: /tmp/metallb.yml
 
 - name: Apply configuration for MetalLB

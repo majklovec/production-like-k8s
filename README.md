@@ -18,10 +18,13 @@ NODES = 2
 
 ### Start cluster
 ```
-$ ./up.sh
+./up.sh
 ```
 
 ### Destroy cluster
+```
+./destroy.sh
+```
 
 ### Get config
 ```
